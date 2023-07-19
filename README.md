@@ -41,3 +41,47 @@ Jetson のモデルによってストレージの構成が異なる。
 ```
 
 
+- docker はインストール済み
+	- 作成したユーザーはdocker グループに属していないので `sudo usermod -aG docker $USER` する
+	- グループ反映は設定後再ログインする
+	- /etc/docker/daemon.json に nvidia runtime は設定済み
+		- "default-runtime": "nvidia" とすると、デフォルトでgpuを使う（gpus=オプションを指定することでnvidia runtimeが使用される）
+		- 通常は runc がデフォルトランタイム
+
+
+# docker の使用
+
+Jetson は arm アーキテクチャなので arm 用にビルドされたイメージが必要。
+
+Jetson 用のベースイメージはここから見つけることができる。
+
+https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml
+
+
+なお、JetPack のバージョンに合うイメージを使用する。
+
+
+
+# 情報収集
+
+l4t のバージョン確認は次の通り。
+
+```
+cat /etc/nv_tegra_release
+dpkg-query --show nvidia-l4t-core
+
+# R32 (release), REVISION: 7.1, GCID: 29818004, BOARD: t210ref, EABI: aarch64, DATE: Sat Feb 19 17:05:08 UTC 2022
+# nvidia-l4t-core 32.7.1-20220219090432
+```
+
+```
+docker run --rm --gpus=all -it nvcr.io/nvidia/l4t-ml:r32.7.1-py3 python3 -c "import sys;print('Python ' + sys.version);import torch;print(torch.cuda.is_available());print(torch.cuda.device_count())"
+
+# True
+# 1
+```
+
+上記のイメージは11GBある。
+ストレージは最低32GBは用意した方がいいだろう。
+
+
