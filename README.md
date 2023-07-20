@@ -85,3 +85,28 @@ docker run --rm --gpus=all -it nvcr.io/nvidia/l4t-ml:r32.7.1-py3 python3 -c "imp
 ストレージは最低32GBは用意した方がいいだろう。
 
 
+
+リアルタイムにパフォーマンスを計測するなら
+
+```
+tegrastats
+```
+
+
+アーキテクチャ情報を取得
+
+```
+uname -m
+
+# x86_64: 64ビットのx86
+# armv7l: 32ビットのarm
+# aarch64: 64ビットのarm
+```
+
+これも
+
+```
+lscpu
+```
+
+
