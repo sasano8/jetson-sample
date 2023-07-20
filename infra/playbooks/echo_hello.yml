@@ -1,0 +1,7 @@
+---
+- name: Run hello world
+  hosts: all
+  tasks:
+    - name: echo hello world
+      changed_when: False  # changedとしてレポートされるのを無効化する
+      shell: echo hello world
