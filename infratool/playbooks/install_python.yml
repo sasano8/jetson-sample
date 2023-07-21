@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+  - name: Update Envirnoment
+    become: yes
+    raw: bash -c "which python3 || which python || (apt -y update && apt install -y python3)"

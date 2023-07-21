@@ -1,0 +1,7 @@
+
+
+# jetsonではnvidia-smiを使用できない
+# cudaを使ったdeviceQueryを利用することができる（多分、cuda環境で使えるはず）
+# cd /usr/local/cuda/samples/1_Utilities/deviceQuery
+# sudo make
+# ./deviceQuery

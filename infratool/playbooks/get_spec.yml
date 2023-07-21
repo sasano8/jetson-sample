@@ -1,0 +1,42 @@
+---
+# - name: Gather CPU Serial Number
+#   hosts: all
+#   become: yes
+#   tasks:
+#     - name: Get CPU Serial Number(for Jetson)
+#       command: cat /sys/firmware/devicetree/base/serial-number
+#       register: cpu_serial_number
+
+#     - name: Set CPU Serial Number as Fact
+#       set_fact:
+#         cpu_serial: "{{ cpu_serial_number.stdout }}"
+
+
+- name: Cleanup facts directory
+  hosts: localhost
+  gather_facts: false  # factsの収集を無効にする（高速化）
+  tasks:
+    - name: Ensure facts directory is absent
+      file:
+        path: "../facts"
+        state: absent
+
+    - name: Ensure facts directory is present
+      file:
+        path: "../facts"
+        state: directory
+
+
+- name: Gather Facts and save as JSON
+  hosts: all
+  tasks:
+    # setupはgather_facts=yesと同じ。明示的に呼び出すために使用する。
+    - name: Setup module to gather facts
+      setup:
+
+    - name: Save facts to a JSON file
+      delegate_to: localhost
+      copy:
+        content: "{{ ansible_facts | to_nice_json }}"
+        dest: "../facts/{{ inventory_hostname }}.json"  # TODO: playbookのパスからの相対パスになる。ちょっと危険
+

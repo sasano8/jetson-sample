@@ -1,0 +1,8 @@
+---
+- name: Run hello world
+  hosts: all
+  # serial: 1  # ダウンロード処理など並列に実行されると負荷がかかる処理は並列処理制限をかけることができる
+  tasks:
+    - name: echo hello world
+      changed_when: False  # changedとしてレポートされるのを無効化する
+      shell: echo hello world
