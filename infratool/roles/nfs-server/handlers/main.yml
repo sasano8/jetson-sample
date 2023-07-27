@@ -1,0 +1,5 @@
+---
+# change の場合のみ実行される
+- name: reboot
+  become: yes
+  reboot:

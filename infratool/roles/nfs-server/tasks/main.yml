@@ -1,0 +1,59 @@
+---
+- name: Install NFS server package
+  become: yes
+  package: 
+    name: nfs-kernel-server
+    state: present
+
+# nfsnobodyグループを作成する
+- name: Ensure nfsnobody group exists
+  become: yes
+  group:
+    name: nfsnobody
+    state: present
+
+
+# nfsnobodyユーザーを作成する
+- name: Ensure nfsnobody user exists
+  become: yes
+  user:
+    name: nfsnobody
+    group: nfsnobody
+    system: yes
+
+- name: Ensure NFS exports directory exists
+  become: yes
+  file: 
+    path: "{{ nfs_server_path }}"
+    state: directory
+    owner: "nfsnobody"
+    group: "nfsnobody"
+    mode: "0777"
+
+- name: Configure NFS exports
+  become: yes
+  lineinfile: 
+    path: "/etc/exports"
+    line: "{{ nfs_server_path }} {{ nfs_network }}(r,sync,no_subtree_check)"
+    create: yes
+  notify: reboot  # changeのときのみ、handlers を呼び出す
+
+- name: Ensure NFS server is running
+  become: yes
+  service: 
+    name: nfs-server
+    state: started
+    enabled: yes
+
+- name: Create a directory if it does not exist
+  file:
+    path: "{{ nfs_server_path }}/resources"
+    state: directory
+    owner: "nfsnobody"
+    group: "nfsnobody"
+    mode: "0777"
+
+- name: Copy the files to the target machines
+  copy:
+    src: "../../files/"
+    dest: "{{ nfs_server_path }}/resources"

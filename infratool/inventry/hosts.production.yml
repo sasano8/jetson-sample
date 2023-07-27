@@ -1,0 +1,12 @@
+---
+all:
+  hosts:
+
+  # hostsで定義し、参照だけにすること
+  children:
+    nfs-servers:
+      hosts:
+    nodes:
+      hosts:
+    iot-devices:
+      hosts:

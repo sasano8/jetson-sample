@@ -1,0 +1,8 @@
+- name: echo hello world
+  changed_when: False  # changedとしてレポートされるのを無効化する
+  shell: echo hello world
+
+- name: Update Envirnoment
+  become: yes
+  raw: bash -c "which python3 || which python || (apt -y update && apt install -y python3)"
+

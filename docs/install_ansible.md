@@ -5,6 +5,13 @@ ansibleに関する詳しい情報は、公式ドキュメントを参照して�
 
 - https://docs.ansible.com/ansible/2.9_ja/installation_guide/intro_installation.html
 
+# ベストプラクティス
+
+ansibleプロジェクトを構成する際のベストプラクティスについては、以下のドキュメントを参照してください。
+
+- https://docs.ansible.com/ansible/2.8/user_guide/playbooks_best_practices.html
+
+
 # コントロールノードのセットアップ
 
 コントロールノードは、構築対象となるホストの管理と、管理ホストに対して構築を行うノードです。

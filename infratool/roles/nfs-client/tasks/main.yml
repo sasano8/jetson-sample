@@ -1,0 +1,22 @@
+---
+- name: Install NFS client package
+  become: yes
+  package: 
+    name: nfs-common
+    state: present
+
+- name: Ensure NFS mount directory exists
+  become: yes
+  file: 
+    path: "{{ nfs_client_mount_path }}"
+    state: directory
+
+- name: Mount NFS directory
+  become: yes
+  mount: 
+    path: "{{ nfs_client_mount_path }}"
+    src: "{{ nfs_server_ip }}:{{ nfs_server_path }}"
+    fstype: nfs
+    opts: "ro,sync"
+    # opts: "rw,sync"
+    state: mounted

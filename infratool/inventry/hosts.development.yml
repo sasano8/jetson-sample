@@ -1,0 +1,20 @@
+---
+all:
+  hosts:
+    worker-1:
+    nfs-1:
+      ansible_host: 10.28.186.97
+      nfs_network: "10.28.186.0/24"  # 接続許可範囲
+      ansible_user: ubuntu
+  
+  # hostsで定義し、参照だけにすること
+  children:
+    nfs-servers:
+      hosts:
+        nfs-1:
+    nodes:
+      hosts:
+        nfs-1:
+    iot-devices:
+      hosts:
+        worker-1:

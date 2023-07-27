@@ -1,15 +1,11 @@
 ---
-# - name: Gather CPU Serial Number
-#   hosts: all
-#   become: yes
-#   tasks:
-#     - name: Get CPU Serial Number(for Jetson)
-#       command: cat /sys/firmware/devicetree/base/serial-number
-#       register: cpu_serial_number
-
-#     - name: Set CPU Serial Number as Fact
-#       set_fact:
-#         cpu_serial: "{{ cpu_serial_number.stdout }}"
+- hosts: nodes,iot-devices
+  roles:
+  become: yes
+  vars:
+    facts_path: "/var/lib/xdata-infra"
+    facts_owner: "sasano8"
+    facts_group: "xdata_ansible"
 
 
 - name: Cleanup facts directory
@@ -19,16 +15,16 @@
     - name: Cleanup facts directory
       become: yes
       file:
-        path: "/var/lib/xdata-infra"
+        path: "{{ facts_path }}"
         state: absent
 
     - name: Make facts directory
       become: yes
       file:
-        path: "/var/lib/xdata-infra"
+        path: "{{ facts_path }}"
         state: directory
-        owner: "sasano8"
-        group: "xdata_ansible"
+        owner: "{{ facts_owner }}"
+        group: "{{ facts_group }}"
         mode: "0770"
 
 - name: Gather Facts and save as JSON
@@ -42,4 +38,4 @@
       delegate_to: localhost
       copy:
         content: "{{ ansible_facts | to_nice_json }}"
-        dest: "/var/lib/xdata-infra/{{ inventory_hostname }}.json"  # TODO: playbookのパスからの相対パスになる。ちょっと危険
+        dest: "{{ facts_path }}/{{ inventory_hostname }}.json"  # TODO: playbookのパスからの相対パスになる。ちょっと危険

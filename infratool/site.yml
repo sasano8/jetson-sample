@@ -1,0 +1,25 @@
+---
+# 一連のplaybookの繋がりを定義する
+
+- hosts: all
+  become: yes
+  roles:
+    - common
+
+- hosts: nfs-servers
+  roles:
+    - nfs-server
+  become: yes
+  vars:
+    nfs_network: "{{ hostvars['nfs-1']['nfs_network'] }}"
+    nfs_server_path: "/srv/nfs"
+
+- hosts: nodes
+  roles:
+    - nfs-client
+  become: yes
+  vars:
+    nfs_server_ip: "{{ hostvars['nfs-1']['ansible_host'] }}"
+    nfs_server_path: "/srv/nfs"
+    nfs_client_mount_path: "/mnt/nfs"
+
